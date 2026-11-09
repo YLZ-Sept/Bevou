@@ -94,8 +94,11 @@ class BaseSearchKnowledgeNode(ISearchKnowledgeStepNode):
                 ).distinct()]
 
         get_knowledge_list_of_authorized = DatabaseModelManage.get_model('get_knowledge_list_of_authorized')
+        if get_knowledge_list_of_authorized is None:
+            # 社区版二开：使用本地实现的知识库对话用户授权
+            from system_manage.serializers.knowledge_chat_user_auth import get_knowledge_list_of_authorized
         chat_user_type = self.workflow_manage.get_body().get('chat_user_type')
-        if get_knowledge_list_of_authorized is not None and RoleConstants.CHAT_USER.value.name == chat_user_type:
+        if chat_user_type in (RoleConstants.CHAT_USER.value.name, 'ANONYMOUS_USER'):
             knowledge_id_list = get_knowledge_list_of_authorized(self.workflow_manage.get_body().get('chat_user_id'),
                                                                  knowledge_id_list)
         workspace_id = self.workflow_manage.get_body().get('workspace_id')

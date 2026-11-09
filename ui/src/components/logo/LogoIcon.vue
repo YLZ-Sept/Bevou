@@ -1,12 +1,13 @@
 <template>
+  <img v-if="theme.themeInfo?.icon" :src="iconUrl" :height="height" alt="" />
   <svg
-    v-if="!isDefaultTheme"
+    v-else-if="!isDefaultTheme"
     :class="!isDefaultTheme ? 'custom-logo-color' : ''"
     :height="height"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 232.4409 232.4409"
   >
-    <title>MaxKB</title>
+    <title>{{ BRAND.name }}</title>
     <path
       class="cls-1"
       d="M128.4532,177H98.7785L87.78,187.9985a4.6069,4.6069,0,0,0,3.2576,7.8644h45.1569a4.6069,4.6069,0,0,0,3.2575-7.8644Z"
@@ -37,6 +38,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import useStore from '@/stores'
+import BRAND from '@/config/brand'
 defineOptions({ name: 'LogoIcon' })
 
 defineProps({
@@ -48,6 +50,13 @@ defineProps({
 const { theme } = useStore()
 const isDefaultTheme = computed(() => {
   return theme.isDefaultTheme()
+})
+const iconUrl = computed(() => {
+  const icon = theme.themeInfo?.icon
+  if (!icon) {
+    return ''
+  }
+  return typeof icon === 'string' ? icon : URL.createObjectURL(icon)
 })
 </script>
 <style lang="scss" scoped>

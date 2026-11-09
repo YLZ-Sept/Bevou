@@ -52,8 +52,11 @@ class BaseSearchDatasetStep(ISearchDatasetStep):
                 manage=None,
                 **kwargs) -> List[ParagraphPipelineModel]:
         get_knowledge_list_of_authorized = DatabaseModelManage.get_model('get_knowledge_list_of_authorized')
+        if get_knowledge_list_of_authorized is None:
+            # 社区版二开：使用本地实现的知识库对话用户授权
+            from system_manage.serializers.knowledge_chat_user_auth import get_knowledge_list_of_authorized
         chat_user_type = manage.context.get('chat_user_type')
-        if get_knowledge_list_of_authorized is not None and RoleConstants.CHAT_USER.value.name == chat_user_type:
+        if chat_user_type in (RoleConstants.CHAT_USER.value.name, 'ANONYMOUS_USER'):
             knowledge_id_list = get_knowledge_list_of_authorized(manage.context.get('chat_user_id'),
                                                                  knowledge_id_list)
         if len(knowledge_id_list) == 0:

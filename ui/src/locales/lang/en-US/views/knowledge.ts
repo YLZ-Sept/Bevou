@@ -6,6 +6,10 @@ export default {
   setting: {
     vectorization: 'Vectorization',
     sync: 'Sync',
+    chatUserAuth: 'Chat User Authorization',
+    chatUserAuthTip: 'No restriction when empty; only selected chat users / user groups can retrieve this knowledge base',
+    chatUserAuthUser: 'Chat Users',
+    chatUserAuthGroup: 'User Groups',
     tokenize: 'Tokenize',
   },
   tip: {

@@ -1,4 +1,5 @@
 import { t } from '@/locales'
+import BRAND from '@/config/brand'
 
 export const themeList = [
   {
@@ -37,7 +38,7 @@ export const defaultSetting = {
   icon: '',
   loginLogo: '',
   loginImage: '',
-  title: 'MaxKB',
+  title: BRAND.name,
   slogan: t('theme.defaultSlogan'),
 }
 

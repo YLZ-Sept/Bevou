@@ -5,6 +5,10 @@ export default {
   setting: {
     vectorization: '向量化',
     sync: '同步',
+    chatUserAuth: '对话用户授权',
+    chatUserAuthTip: '不选择任何对象时不限制；选择后仅这些对话用户/用户组可检索本知识库',
+    chatUserAuthUser: '对话用户',
+    chatUserAuthGroup: '用户组',
     tokenize: '分词索引',
   },
 

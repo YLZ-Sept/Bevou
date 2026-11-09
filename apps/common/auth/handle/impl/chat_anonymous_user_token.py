@@ -42,10 +42,9 @@ class ChatAnonymousUserToken(AuthBaseHandle):
             raise AppAuthenticationFailed(1002, _('Authentication information is incorrect'))
         if not application_access_token.access_token == access_token:
             raise AppAuthenticationFailed(1002, _('Authentication information is incorrect'))
-        if application_access_token.authentication and ['PE', 'EE'].__contains__(edition):
-            if chat_user_token.authentication.auth_type != application_access_token.authentication_value.get('type',
-                                                                                                             ''):
-                raise AppAuthenticationFailed(1002, _('Authentication information is incorrect'))
+        # 开启对话用户认证后，匿名 token 不再放行（二开：社区版同样生效）
+        if application_access_token.authentication:
+            raise AppAuthenticationFailed(1002, _('Authentication information is incorrect'))
         return None, ChatAuth(
             current_role_list=[RoleConstants.CHAT_ANONYMOUS_USER],
             permission_list=[

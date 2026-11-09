@@ -324,6 +324,11 @@ const configFields: { [propName: string]: { [propName: string]: any } } = {
   dingtalk: {
     client_id: { label: 'Client ID', placeholder: '' },
     client_secret: { label: 'Client Secret', placeholder: '' },
+    token: { label: 'Token', placeholder: '事件订阅回调 Token（可选）' },
+    encoding_aes_key: {
+      label: 'EncodingAESKey',
+      placeholder: '事件订阅回调 EncodingAESKey（可选）',
+    },
   },
   wecom: {
     app_id: {

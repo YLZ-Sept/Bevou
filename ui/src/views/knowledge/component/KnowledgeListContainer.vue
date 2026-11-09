@@ -261,6 +261,13 @@
                               {{ $t('views.knowledge.setting.sync') }}
                             </el-dropdown-item>
                             <el-dropdown-item
+                              @click.stop="openChatUserAuth(item)"
+                              v-if="user.is_admin()"
+                            >
+                              <AppIcon iconName="app-user-chat" class="color-secondary"></AppIcon>
+                              {{ $t('views.knowledge.setting.chatUserAuth') }}
+                            </el-dropdown-item>
+                            <el-dropdown-item
                               @click.stop="reEmbeddingKnowledge(item)"
                               v-if="permissionPrecise.vector(item.id)"
                             >
@@ -433,6 +440,7 @@
   <TemplateStoreDialog ref="templateStoreDialogRef" :api-type="apiType" @refresh="getList" />
   <ResourceMappingDrawer ref="resourceMappingDrawerRef"></ResourceMappingDrawer>
   <ExportKnowledgeDialog ref="exportKnowledgeDialogRef" />
+  <ChatUserAuthDialog ref="ChatUserAuthDialogRef" />
 </template>
 
 <script lang="ts" setup>
@@ -461,6 +469,7 @@ import permissionMap from '@/permission'
 import useStore from '@/stores'
 import { t } from '@/locales'
 import ExportKnowledgeDialog from '@/views/knowledge/component/ExportKnowledgeDialog.vue'
+import ChatUserAuthDialog from '@/views/knowledge/component/ChatUserAuthDialog.vue'
 
 const resourceMappingDrawerRef = ref<InstanceType<typeof ResourceMappingDrawer>>()
 
@@ -827,6 +836,12 @@ function searchHandle() {
 
 function refreshFolder() {
   emit('refreshFolder')
+}
+
+const ChatUserAuthDialogRef = ref()
+
+function openChatUserAuth(item: any) {
+  ChatUserAuthDialogRef.value?.open(item)
 }
 
 const templateStoreDialogRef = ref()

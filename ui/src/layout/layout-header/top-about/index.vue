@@ -1,6 +1,7 @@
 <template>
   <div class="flex align-center top-about">
     <el-button
+      v-if="BRAND.showUpgrade"
       round
       @click="toUrl('https://maxkb.cn/price')"
       class="pricing-button mr-8"
@@ -84,6 +85,7 @@ import useStore from '@/stores'
 import { hasPermission } from '@/utils/permission'
 import { EditionConst, PermissionConst, RoleConst } from '@/utils/permission/data'
 import { useRoute, useRouter } from 'vue-router'
+import BRAND from '@/config/brand'
 const route = useRoute()
 const router = useRouter()
 const { theme, user } = useStore()

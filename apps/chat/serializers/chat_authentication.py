@@ -39,6 +39,9 @@ class AnonymousAuthenticationSerializer(serializers.Serializer):
         access_token = self.data.get("access_token")
         application_access_token = QuerySet(ApplicationAccessToken).filter(access_token=access_token).first()
         if application_access_token is not None and application_access_token.is_active:
+            if application_access_token.authentication:
+                # 开启对话用户认证后不再签发匿名 token
+                raise AppUnauthorizedFailed(401, _('Please log in first'))
             chat_user_id = token_details.get('chat_user_id') or str(uuid.uuid7())
             _type = AuthenticationType.CHAT_ANONYMOUS_USER
             return ChatUserToken(application_access_token.application_id, None, access_token, _type,
@@ -66,25 +69,22 @@ class AuthProfileSerializer(serializers.Serializer):
         profile = {
             'authentication': False
         }
-        application_setting_model = DatabaseModelManage.get_model('application_setting')
-        chat_platform = DatabaseModelManage.get_model('chat_platform')
-        if application_setting_model and chat_platform:
-            application_setting = QuerySet(application_setting_model).filter(application_id=application_id).first()
-            types = QuerySet(chat_platform).filter(is_active=True, is_valid=True).values_list('auth_type', flat=True)
-            login_value = application_access_token.authentication_value.get('login_value', [])
-            max_attempts = application_access_token.authentication_value.get('max_attempts', 1)
-            final_login_value = list(set(login_value) & set(types))
-            if 'LOCAL' in login_value:
-                final_login_value.insert(0, 'LOCAL')
-            if application_setting is not None:
+        if application_access_token.authentication:
+            application = QuerySet(Application).filter(id=application_id).first()
+            authentication_value = application_access_token.authentication_value or {}
+            login_value = authentication_value.get('login_value', [])
+            # 社区版（二开）只支持本地账号登录
+            final_login_value = ['LOCAL'] if 'LOCAL' in login_value else []
+            if application is not None:
                 profile = {
-                    'icon': application_setting.application.icon,
-                    'application_name': application_setting.application.name,
-                    'bg_icon': application_setting.chat_background,
-                    'authentication': application_access_token.authentication,
-                    'authentication_type': application_access_token.authentication_value.get(
-                        'type', 'password'),
-                    'max_attempts': max_attempts,
+                    'icon': application.icon,
+                    'application_name': application.name,
+                    'bg_icon': '',
+                    'authentication': True,
+                    # 'login' 表示对话用户登录；'password' 表示应用访问密码
+                    'authentication_type': authentication_value.get(
+                        'type', 'login' if login_value else 'password'),
+                    'max_attempts': authentication_value.get('max_attempts', 1),
                     'login_value': final_login_value,
                     'rsaKey': get_key_pair_by_sql().get('key')
                 }

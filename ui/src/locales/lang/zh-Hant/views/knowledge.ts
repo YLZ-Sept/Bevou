@@ -6,6 +6,10 @@ export default {
   setting: {
     vectorization: '向量化',
     sync: '同步',
+    chatUserAuth: '對話用戶授權',
+    chatUserAuthTip: '不選擇任何對象時不限制；選擇後僅這些對話用戶/用戶組可檢索本知識庫',
+    chatUserAuthUser: '對話用戶',
+    chatUserAuthGroup: '用戶組',
     tokenize: '分词索引',
   },
   tip: {

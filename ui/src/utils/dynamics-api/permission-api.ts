@@ -55,5 +55,10 @@ export function loadPermissionApi(type: string) {
       // 加载企业版工作空间管理员 API
       return workspaceApiMap[type]
     }
+    return undefined
+  }
+  // 社区版（二开）：系统管理员直接使用系统 API
+  if (hasPermission(systemPermissionMap[type as keyof typeof systemPermissionMap], 'OR')) {
+    return systemApiMap[type]
   }
 }

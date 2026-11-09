@@ -451,13 +451,13 @@ const systemRouter = {
           new ComplexPermission(
             [RoleConst.WORKSPACE_MANAGE, RoleConst.ADMIN],
             [PermissionConst.WORKSPACE_CHAT_USER_READ, PermissionConst.CHAT_USER_READ],
-            [EditionConst.IS_EE, EditionConst.IS_PE],
+            [],
             'OR',
           ),
           new ComplexPermission(
             [RoleConst.WORKSPACE_MANAGE, RoleConst.ADMIN],
             [PermissionConst.WORKSPACE_USER_GROUP_READ, PermissionConst.USER_GROUP_READ],
-            [EditionConst.IS_EE, EditionConst.IS_PE],
+            [],
             'OR',
           ),
           new ComplexPermission(
@@ -482,7 +482,7 @@ const systemRouter = {
               new ComplexPermission(
                 [RoleConst.WORKSPACE_MANAGE, RoleConst.ADMIN],
                 [PermissionConst.CHAT_USER_READ, PermissionConst.WORKSPACE_CHAT_USER_READ],
-                [EditionConst.IS_EE, EditionConst.IS_PE],
+                [],
                 'OR',
               ),
             ],
@@ -502,7 +502,7 @@ const systemRouter = {
               new ComplexPermission(
                 [RoleConst.WORKSPACE_MANAGE, RoleConst.ADMIN],
                 [PermissionConst.WORKSPACE_USER_GROUP_READ, PermissionConst.USER_GROUP_READ],
-                [EditionConst.IS_EE, EditionConst.IS_PE],
+                [],
                 'OR',
               ),
             ],
@@ -546,7 +546,7 @@ const systemRouter = {
           new ComplexPermission(
             [RoleConst.ADMIN],
             [PermissionConst.APPEARANCE_SETTINGS_READ],
-            [EditionConst.IS_EE, EditionConst.IS_PE],
+            [],
             'OR',
           ),
           new ComplexPermission(
@@ -572,7 +572,7 @@ const systemRouter = {
               new ComplexPermission(
                 [RoleConst.ADMIN],
                 [PermissionConst.APPEARANCE_SETTINGS_READ],
-                [EditionConst.IS_EE, EditionConst.IS_PE],
+                [],
                 'OR',
               ),
             ],
@@ -636,7 +636,7 @@ const systemRouter = {
           new ComplexPermission(
             [RoleConst.ADMIN],
             [PermissionConst.OPERATION_LOG_READ],
-            [EditionConst.IS_EE, EditionConst.IS_PE],
+            [],
             'OR',
           ),
         ],

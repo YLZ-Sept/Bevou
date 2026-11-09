@@ -144,9 +144,10 @@ const useUserStore = defineStore('user', {
             this.version = ok.data.version
             this.rsaKey = ok.data.rsa
             const theme = useThemeStore()
-            if (this.isEE() || this.isPE()) {
+            try {
+              // 社区版也支持外观设置（二开实现），失败时回退到默认配置
               await theme.theme()
-            } else {
+            } catch (e) {
               theme.setTheme()
               theme.themeInfo = {
                 ...defaultPlatformSetting,

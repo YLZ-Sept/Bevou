@@ -71,7 +71,7 @@
                 new ComplexPermission(
                   [RoleConst.ADMIN],
                   [PermissionConst.OPERATION_LOG_EXPORT],
-                  [EditionConst.IS_EE, EditionConst.IS_PE],
+                  [],
                   'OR',
                 )
               "
@@ -83,7 +83,7 @@
                 new ComplexPermission(
                   [RoleConst.ADMIN],
                   [PermissionConst.OPERATION_LOG_CLEAR_POLICY],
-                  [EditionConst.IS_EE, EditionConst.IS_PE],
+                  [],
                   'OR',
                 )
               "
@@ -102,7 +102,8 @@
           v-loading="loading"
           show-overflow-tooltip
         >
-          <el-table-column prop="menu" :label="$t('views.operateLog.table.menu')" width="160">
+          <el-table-column prop="menu_label" :label="$t('views.operateLog.table.menu')" width="160">
+            <template #default="{ row }">{{ row.menu_label || row.menu }}</template>
             <template #header>
               <div>
                 <span>{{ $t('views.operateLog.table.menu') }}</span>
@@ -301,7 +302,7 @@ import { t } from '@/locales'
 import { beforeDay, datetimeFormat, nowDate } from '@/utils/time'
 import useStore from '@/stores'
 import WorkspaceApi from '@/api/system/workspace.ts'
-import { EditionConst, PermissionConst, RoleConst } from '@/utils/permission/data.ts'
+import { PermissionConst, RoleConst } from '@/utils/permission/data.ts'
 import { ComplexPermission } from '@/utils/permission/type.ts'
 import { MsgSuccess } from '@/utils/message.ts'
 

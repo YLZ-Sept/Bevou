@@ -81,14 +81,12 @@ class AccessTokenSerializer(serializers.Serializer):
             application_access_token.language = None
 
         application_access_token.save()
-        license_is_valid = cache.get(Cache_Version.SYSTEM.get_key(key='license_is_valid'),
-                                     version=Cache_Version.SYSTEM.get_version())
-        if license_is_valid:
-            if instance.get('authentication') is not None and instance.get(
-                    'authentication_value') is not None:
-                application_access_token.authentication = instance.get('authentication')
-                application_access_token.authentication_value = instance.get('authentication_value')
-                application_access_token.save()
+        # 社区版二开：对话用户认证使用本地实现，不再依赖闭源授权
+        if instance.get('authentication') is not None and instance.get(
+                'authentication_value') is not None:
+            application_access_token.authentication = instance.get('authentication')
+            application_access_token.authentication_value = instance.get('authentication_value')
+            application_access_token.save()
         return self.one(with_valid=False)
 
     def one(self, with_valid=True):
@@ -103,12 +101,9 @@ class AccessTokenSerializer(serializers.Serializer):
                                                                   str(uuid.uuid7()).encode()).hexdigest()[
                                                                            8:24], is_active=True)
             application_access_token.save()
-        other = {}
-        license_is_valid = cache.get(Cache_Version.SYSTEM.get_key(key='license_is_valid'),
-                                     version=Cache_Version.SYSTEM.get_version())
-        if license_is_valid:
-            other = {'authentication': application_access_token.authentication,
-                     'authentication_value': application_access_token.authentication_value}
+        # 社区版二开：始终返回对话用户认证配置
+        other = {'authentication': application_access_token.authentication,
+                 'authentication_value': application_access_token.authentication_value}
 
         return {'application_id': application_access_token.application_id,
                 'access_token': application_access_token.access_token,

@@ -39,6 +39,36 @@
           type="textarea"
         />
       </el-form-item>
+
+      <el-divider />
+
+      <el-form-item
+        :label="$t('views.applicationOverview.appInfo.chatUserAuthentication')"
+        @click.prevent
+      >
+        <el-switch size="small" v-model="form.authentication"></el-switch>
+        <el-text type="info" class="ml-8">
+          {{ $t('views.applicationOverview.appInfo.chatUserAuthenticationTip') }}
+        </el-text>
+      </el-form-item>
+      <template v-if="form.authentication">
+        <el-form-item :label="$t('views.applicationOverview.appInfo.loginMethod')">
+          <el-checkbox-group v-model="loginValues">
+            <el-checkbox label="LOCAL">
+              {{ $t('views.applicationOverview.appInfo.localLogin') }}
+            </el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item :label="$t('views.applicationOverview.appInfo.maxAttempts')">
+          <el-input-number
+            v-model="maxAttempts"
+            :min="0"
+            :max="10"
+            controls-position="right"
+            style="width: 160px"
+          />
+        </el-form-item>
+      </template>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
@@ -77,9 +107,11 @@ const form = ref<any>({
   access_num: 0,
   white_active: true,
   white_list: '',
-  authentication_value: '',
+  authentication_value: {},
   authentication: false,
 })
+const loginValues = ref<string[]>(['LOCAL'])
+const maxAttempts = ref<number>(1)
 
 const dialogVisible = ref<boolean>(false)
 const loading = ref(false)
@@ -98,8 +130,12 @@ const open = (data: any) => {
   form.value.access_num = data.access_num
   form.value.white_active = data.white_active
   form.value.white_list = data.white_list?.length ? data.white_list?.join('\n') : ''
-  form.value.authentication_value = data.authentication_value
+  form.value.authentication_value = data.authentication_value || {}
   form.value.authentication = data.authentication
+  loginValues.value = data.authentication_value?.login_value?.length
+    ? data.authentication_value.login_value
+    : ['LOCAL']
+  maxAttempts.value = data.authentication_value?.max_attempts ?? 1
   dialogVisible.value = true
 }
 
@@ -112,7 +148,13 @@ const submit = async (formEl: FormInstance | undefined) => {
         white_active: form.value.white_active,
         access_num: form.value.access_num,
         authentication: form.value.authentication,
-        authentication_value: form.value.authentication_value,
+        authentication_value: form.value.authentication
+          ? {
+              type: 'login',
+              login_value: ['LOCAL'],
+              max_attempts: maxAttempts.value,
+            }
+          : {},
       }
       loadSharedApi({ type: 'application', systemType: apiType.value })
         .putAccessToken(id as string, obj, loading)

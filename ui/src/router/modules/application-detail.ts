@@ -146,6 +146,11 @@ const ApplicationDetailRouter = {
             const to: any = get_next_route()
             if (to.path.includes('resource-management')) { return PermissionConst.RESOURCE_APPLICATION_ACCESS_READ }
           },
+          () => {
+            // 社区版二开：管理员的普通工作空间应用也开放第三方接入配置
+            const to: any = get_next_route()
+            if (to && !to.path.includes('resource-management')) { return RoleConst.ADMIN }
+          },
         ]
       },
       component: () => import('@/views/application/ApplicationAccess.vue'),

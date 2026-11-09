@@ -14,3 +14,5 @@ from .application_stats import *
 from .application_chat import *
 from .application_chat_record import *
 from .application_chat_link import *
+from .platform_config import *
+from .platform_callback import *

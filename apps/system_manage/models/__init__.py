@@ -10,3 +10,5 @@ from .workspace_user_permission import *
 from .system_setting import *
 from .log_management import *
 from .chat_user import *
+from .knowledge_chat_user_auth import *
+from .application_platform_config import *
