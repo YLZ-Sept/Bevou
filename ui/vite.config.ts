@@ -30,6 +30,28 @@ const renameHtmlPlugin = (outDir: string, entry: string) => {
     },
   }
 }
+// 开发环境：把 /admin/*、/chat/* 这类无扩展名的页面请求回退到对应入口 html
+// （生产由后端 page_not_found 兜底，Vite dev 本身只按文件路径提供服务）
+const devHistoryFallback = (base: string, entry: string) => {
+  const normalizedBase = base.endsWith('/') ? base : `${base}/`
+  return {
+    name: 'dev-history-fallback',
+    configureServer(server: any) {
+      server.middlewares.use((req: any, _res: any, next: any) => {
+        if (req.method !== 'GET' || !(req.headers.accept || '').includes('text/html')) {
+          return next()
+        }
+        const [pathname, query] = (req.url || '').split('?')
+        const rest = pathname.slice(normalizedBase.length)
+        if (pathname.startsWith(normalizedBase) && rest && !/\.[a-zA-Z0-9]+$/.test(rest)) {
+          req.url = `/${entry}${query ? `?${query}` : ''}`
+        }
+        next()
+      })
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig((conf: any) => {
   const mode = conf.mode
@@ -85,12 +107,15 @@ export default defineConfig((conf: any) => {
     lintOnSave: false,
     base: './',
     envDir: envDir,
+    // admin/chat 两个 dev server 共用 node_modules/.vite 会互相抢占依赖缓存（EPERM），按 mode 隔离
+    cacheDir: `node_modules/.vite-${mode}`,
     plugins: [
       vue(),
       vueJsx(),
       DefineOptions(),
       createHtmlPlugin({template: ENV.VITE_ENTRY}),
       renameHtmlPlugin(`dist${ENV.VITE_BASE_PATH}`, ENV.VITE_ENTRY),
+      devHistoryFallback(ENV.VITE_BASE_PATH, ENV.VITE_ENTRY),
     ],
     server: {
       cors: true,

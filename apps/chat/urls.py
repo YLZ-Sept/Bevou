@@ -1,6 +1,7 @@
 from django.urls import path
 
 from application.views import ChatRecordDetailView, ChatRecordLinkView
+from system_manage.views.display import DisplayImageView
 from chat.views.mcp import mcp_view
 from . import views
 
@@ -9,6 +10,8 @@ app_name = 'chat'
 # fmt: off
 urlpatterns = [
     path('embed', views.ChatEmbedView.as_view()),
+    path('display/info', views.ChatDisplayInfoView.as_view()),
+    path('display/image/<str:image_name>', DisplayImageView.as_view()),
     path('mcp', mcp_view),
     path('auth/anonymous', views.AnonymousAuthentication.as_view()),
     path('auth/login/<str:access_token>', views.ChatUserLoginView.as_view()),

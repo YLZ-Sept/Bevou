@@ -30,7 +30,8 @@ export function filesize(size: number) {
 export const defaultIcon = `${window.MaxKB.prefix}/favicon.ico`
 
 export function isAppIcon(url: string | undefined) {
-  return url === defaultIcon ? '' : url
+  // 后端应用默认图标是 './favicon.ico'，与前端 defaultIcon 前缀形式不一致，统一按默认图标处理
+  return !url || url === defaultIcon || url === './favicon.ico' ? '' : url
 }
 
 export function isFunction(fn: any) {

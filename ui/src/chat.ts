@@ -11,6 +11,7 @@ import router from '@/router/chat'
 import i18n, {initExternalLocales} from '@/locales'
 import Components from '@/components'
 import directives from '@/directives'
+import useStore from '@/stores'
 import { supPopover } from '@/utils/supPopover'
 import { getDefaultWhiteList } from 'xss'
 import { config, XSSPlugin } from 'md-editor-v3'
@@ -94,6 +95,9 @@ config({
 supPopover.init()
 const app = createApp(App)
 app.use(createPinia())
+// 加载系统外观配置（Logo/名称/主题色），与后台保持一致
+const { theme } = useStore()
+theme.theme()
 for (const [key, component] of Object.entries(ElementPlusIcons)) {
   app.component(key, component)
 }

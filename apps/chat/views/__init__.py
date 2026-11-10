@@ -10,3 +10,4 @@ from .chat_embed import *
 from .chat import *
 from .chat_record import *
 from .chat_user_auth import *
+from .chat_display import *

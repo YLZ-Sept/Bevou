@@ -38,10 +38,10 @@ DEFAULT_DISPLAY = {
 }
 
 
-def image_url(name: str) -> str:
+def image_url(name: str, prefix: str = None) -> str:
     if not name:
         return ''
-    return f'{CONFIG.get_admin_path()}/api/display/image/{name}'
+    return f'{prefix or CONFIG.get_admin_path()}/api/display/image/{name}'
 
 
 def get_display_image_path(name: str):
@@ -92,7 +92,7 @@ def _delete_image(name: str):
         pass
 
 
-def get_display_info() -> dict:
+def get_display_info(prefix: str = None) -> dict:
     meta = _load_meta()
     info = dict(DEFAULT_DISPLAY)
     for key in TEXT_FIELDS:
@@ -102,7 +102,7 @@ def get_display_info() -> dict:
         if key in meta:
             info[key] = bool(meta.get(key))
     for key in IMAGE_FIELDS:
-        info[key] = image_url(meta.get(key))
+        info[key] = image_url(meta.get(key), prefix)
     return info
 
 

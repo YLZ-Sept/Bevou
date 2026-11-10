@@ -205,6 +205,7 @@ import { MsgSuccess, MsgConfirm } from '@/utils/message'
 import { copyClick } from '@/utils/clipboard'
 import { resetUrl } from '@/utils/common'
 import { mapToUrlParams } from '@/utils/application'
+import useStore from '@/stores'
 import { t } from '@/locales'
 import { EditionConst } from '@/utils/permission/data'
 import { hasPermission } from '@/utils/permission/index'
@@ -215,6 +216,7 @@ const route = useRoute()
 const {
   params: { id },
 } = route as any
+const { application: applicationStore } = useStore()
 
 const apiType = computed(() => {
   if (route.path.includes('resource-management')) {
@@ -242,11 +244,9 @@ const loading = ref(false)
 const urlParams = computed(() =>
   mapToUrlParams(apiInputParams.value) ? '?' + mapToUrlParams(apiInputParams.value) : '',
 )
+// 开发环境 chat 前端独立端口，applicationStore.location 已按环境处理
 const shareUrl = computed(
-  () =>
-    `${window.location.origin}${window.MaxKB.chatPrefix}/` +
-    accessToken.value?.access_token +
-    urlParams.value,
+  () => `${applicationStore.location}` + accessToken.value?.access_token + urlParams.value,
 )
 
 const dayOptions = [

@@ -194,7 +194,7 @@ import TemplateStoreDialog from '@/views/application/template-store/TemplateStor
 provide('getResourceDetail', () => detail)
 provide('workflowMode', WorkflowMode.Application)
 provide('loopWorkflowMode', WorkflowMode.ApplicationLoop)
-const { theme } = useStore()
+const { theme, application: applicationStore } = useStore()
 const router = useRouter()
 const route = useRoute()
 const {
@@ -249,11 +249,9 @@ const apiInputParams = ref([])
 const urlParams = computed(() =>
   mapToUrlParams(apiInputParams.value) ? '?' + mapToUrlParams(apiInputParams.value) : '',
 )
+// 开发环境 chat 前端独立端口，applicationStore.location 已按环境处理
 const shareUrl = computed(
-  () =>
-    `${window.location.origin}${window.MaxKB.chatPrefix}/` +
-    detail.value?.access_token +
-    urlParams.value,
+  () => `${applicationStore.location}` + detail.value?.access_token + urlParams.value,
 )
 
 function back() {
